@@ -55,7 +55,9 @@ export class Store<T, U> {
         (this.subject.getValue() as any).values
       ) as StoreValueType<T, U>;
     } else {
-      return structuredClone(this.subject.getValue()) as StoreValueType<T, U>;
+      return structuredClone(
+        (this.subject.getValue() as any).value
+      ) as StoreValueType<T, U>;
     }
   }
 
@@ -70,11 +72,11 @@ export class Store<T, U> {
   /**
    * @description Store'daki veri sayısını döner.
    */
-  get count(): U extends ArrayStore ? number : undefined {
+  get count(): number {
     if ((this.subject.value as any).hasOwnProperty('values')) {
       return (this.subject.getValue() as any).values.length;
     } else {
-      return undefined as U extends ArrayStore ? number : undefined;
+      throw new Error('This store is ObjectStore, not an ArrayStore.');
     }
   }
 

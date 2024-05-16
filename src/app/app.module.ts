@@ -12,6 +12,7 @@ import { FavoriteListComponent } from './favorite-list/favorite-list.component';
 import { ProductStore } from './stores/product.store';
 import { AddProductComponent } from './add-product/add-product.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ParameterStore } from './stores/parameter.store';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     FavoriteListComponent,
     ReactiveFormsModule
   ],
-  providers: [ProductStore],
+  providers: [ProductStore,ParameterStore],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

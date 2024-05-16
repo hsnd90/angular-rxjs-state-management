@@ -3,13 +3,16 @@ import { ProductService } from '../product.service';
 import { Product } from '../models/product.model';
 import { ArrayStore, Store } from '../store';
 import { lastValueFrom } from 'rxjs';
+import { ParameterStore } from './parameter.store';
 
 export class ProductStore extends Store<Product, ArrayStore> {
   private productService: ProductService;
+  private parameterStore: InstanceType<typeof ParameterStore>;
 
   constructor() {
     super({ operation: null, value: null, values: [] });
     this.productService = inject(ProductService);
+    this.parameterStore = inject(ParameterStore);
   }
 
   async loadProducts() {
@@ -42,10 +45,11 @@ export class ProductStore extends Store<Product, ArrayStore> {
   }
 
   favoriteProducts() {
+    let favoriteCount = this.parameterStore.state.favoriteProductCount;
     let topProducts = [...this.state];
     return topProducts
       .sort((a, b) => b.quantitySold - a.quantitySold)
-      .filter((product, index) => index < 10);
+      .filter((product, index) => index < favoriteCount);
   }
 }
 
