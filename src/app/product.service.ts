@@ -9,6 +9,6 @@ export class ProductService {
   constructor() {}
 
   getProducts() {
-    return of(products).pipe(delay(350));
+    return of(products).pipe(delay(550));
   }
 }
