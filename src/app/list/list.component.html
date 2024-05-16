@@ -1,0 +1,30 @@
+<app-favorite-list></app-favorite-list>
+<div class="container mt-2">
+  <button class="btn btn-success" [routerLink]="'/add-product'">
+    Ürün Ekle
+  </button>
+  {{productCount}}
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Ürün</th>
+        <th scope="col">Fiyat</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of products">
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.price }} TL</td>
+        <td>
+          <i
+            class="fas fa-cart-plus icon-size-2x cursor-pointer"
+            (click)="addProductToBasket(p)"
+          ></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

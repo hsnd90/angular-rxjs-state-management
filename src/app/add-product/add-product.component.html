@@ -1,0 +1,42 @@
+<div class="container mt-2">
+  <form [formGroup]="productForm">
+    <div class="input-group mb-3">
+      <label for="staticEmail" class="col-sm-2 col-form-label"
+        >Product Name</label
+      >
+      <input
+        formControlName="name"
+        type="text"
+        class="form-control"
+        placeholder="Product Name"
+        aria-label="Product Name"
+        aria-describedby="basic-addon1"
+      />
+    </div>
+    <div class="input-group mb-3">
+      <label for="staticEmail" class="col-sm-2 col-form-label">Category</label>
+      <select
+        class="form-select"
+        aria-label="Default select example"
+        formControlName="categoryId"
+      >
+        <option value="0" selected disabled>Select category...</option>
+        <option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+    <div class="input-group mb-3">
+      <label for="staticEmail" class="col-sm-2 col-form-label">Price</label>
+      <input
+        formControlName="price"
+        type="number"
+        class="form-control"
+        placeholder="Price"
+        aria-label="Username"
+        aria-describedby="basic-addon1"
+      />
+    </div>
+  </form>
+  <button (click)="onSubmit()" class="btn btn-success">Save</button>
+</div>

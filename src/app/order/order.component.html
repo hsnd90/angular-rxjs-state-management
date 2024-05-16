@@ -1,0 +1,22 @@
+<div class="order container mt-1" *ngFor="let order of orders">
+  <div class="card mt-1">
+    <div class="card-header d-flex justify-content-between">
+      <p class="m-0 p-0">Sipariş No: {{ order.id }}</p>
+      <p class="m-0 p-0">Adres: {{ order.address }}</p>
+    </div>
+    <div class="card-body">
+      <div class="baskets px-2" *ngFor="let basket of order.baskets">
+        <div class="basket d-flex justify-content-between">
+          <p class="card-title m-0 p-0">{{ basket.product!.name }}</p>
+          <h6 class="card-title">{{ basket.product!.price }} TL</h6>
+        </div>
+      </div>
+      <div
+        class="total-amount d-flex justify-content-between bg-secondary text-light rounded p-1"
+      >
+        <p class="m-0 p-0">Toplam</p>
+        <p class="m-0 p-0">{{ getTotalPrice(order) }} TL</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
+.icon-size-x {
+  font-size: 12px;
+}
+.icon-size-2x {
+  font-size: 24px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.fas {
+  transition: all 0.1s ease-in-out;
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chip {
+  width: 25px;
+  height: 25px;
+}
