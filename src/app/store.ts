@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 /**
  * @typeParam T - Store'da saklanacak verinin tipi veya modeli.
  * @typeParam U - Store tipi. ArrayStore veya ObjectStore olabilir.
@@ -6,13 +6,15 @@ import { BehaviorSubject } from 'rxjs';
 export class Store<T, U> {
   constructor(private initialValue: any) {}
 
-  private subject = new BehaviorSubject<U>(this.initialValue);
+  private readonly subject: BehaviorSubject<U> = new BehaviorSubject<U>(
+    this.initialValue
+  );
 
   /**
    * @description Store'daki veri değiştiğinde tetiklenir.
    * @returns ArrayStore veya ObjectStore tipinde veri döner.
    */
-  onChanged$ = this.subject.asObservable();
+  readonly onChanged$: Observable<U> = this.subject.asObservable();
 
   /**
    * @param value - Asenkron işlemlerden gelen veriyi store'a yükler. Saklanan veri Array ise ArrayStore, Object ise ObjectStore tipinde olmalıdır.
@@ -45,14 +47,14 @@ export class Store<T, U> {
    * @description Store'daki veriyi günceller.
    * @param value - Saklanan veri Array ise ArrayStore, Object ise ObjectStore tipinde olmalıdır.
    */
-  setState(value: U) {
+  setState(value: U): void {
     this.subject.next(value);
   }
 
   /**
    * Store'daki tüm veriyi temizler.
    */
-  clearState() {
+  clearState(): void {
     if ((this.subject.value as any).hasOwnProperty('values')) {
       this.subject.next({
         operation: 'cleared',

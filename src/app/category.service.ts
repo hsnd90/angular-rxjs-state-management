@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { categories } from './category';
+import { delay, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,7 @@ import { categories } from './category';
 export class CategoryService {
   constructor() {}
 
-  getCategories() {
-    return categories;
+  async getCategories() {
+    return of(categories).pipe(delay(450));
   }
 }

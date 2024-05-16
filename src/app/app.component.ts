@@ -1,6 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ProductStore } from './stores/product.store';
-import { CategoriesStore } from './stores/category.store';
 import { BasketStore } from './stores/basket.store';
 import { OrderStore } from './stores/order.store';
 
@@ -10,16 +9,13 @@ import { OrderStore } from './stores/order.store';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  productStore: InstanceType<typeof ProductStore>;
-  categoryStore: InstanceType<typeof CategoriesStore>;
-  orderStore: InstanceType<typeof OrderStore>;
-  basketStore: BasketStore;
+  private readonly productStore: InstanceType<typeof ProductStore>;
+  private readonly orderStore: InstanceType<typeof OrderStore>;
+  private readonly basketStore: InstanceType<typeof BasketStore>;
 
   constructor() {
     this.productStore = inject(ProductStore);
-    this.categoryStore = inject(CategoriesStore);
     this.orderStore = inject(OrderStore);
-
     this.basketStore = inject(BasketStore);
 
     this.basketStore.onChanged$.subscribe((data) => {
@@ -29,8 +25,10 @@ export class AppComponent implements OnInit {
     this.orderStore.onChanged$.subscribe((data) => {
       console.log('Order Store Event', data);
     });
+
+    this.productStore.onChanged$.subscribe((data) => {
+      console.log('Product Store Event', data);
+    });
   }
-  async ngOnInit() {
-    this.categoryStore.loadCategories();
-  }
+  async ngOnInit() {}
 }

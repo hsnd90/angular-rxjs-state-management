@@ -1,3 +1,4 @@
+import { lastValueFrom } from 'rxjs';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { Category } from '../models/category.model';
 import { CategoryService } from '../category.service';
@@ -15,8 +16,9 @@ export const CategoriesStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withMethods((store, categoryService = inject(CategoryService)) => ({
-    loadCategories() {
-      patchState(store, { categories: categoryService.getCategories() });
+    async loadCategories() {
+      let categories = await lastValueFrom(await categoryService.getCategories());
+      patchState(store, { categories });
     },
   }))
 );

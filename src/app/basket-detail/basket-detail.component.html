@@ -7,6 +7,7 @@
           <th scope="col">Ürün</th>
           <th scope="col">Adet</th>
           <th scope="col">Fiyat</th>
+          <th scope="col">Toplam</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -16,6 +17,7 @@
           <td>{{ b.product?.name }}</td>
           <td>{{ b.quantity }}</td>
           <td>{{ b.product?.price }}</td>
+          <td>{{ b.quantity * b.product?.price! }}</td>
           <td class="d-flex gap-1">
             <span
               class="rounded-circle bg-success text-white p-1 cursor-pointer chip"
