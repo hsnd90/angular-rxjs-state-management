@@ -8,7 +8,7 @@
     </button>
     <p class="p-o m-0">
       <i>
-        <b>{{ productCount }}</b> adet ürün listelenmektedir
+        <b>{{ productCount }}</b> adet ürün listelenmektedir.
       </i>
     </p>
   </div>
@@ -37,4 +37,26 @@
       </tr>
     </tbody>
   </table>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item cursor-pointer" [ngClass]="{ disabled: activePage == 1 }">
+        <a class="page-link" (click)="onPrevious()">Previous</a>
+      </li>
+      <li
+        class="page-item cursor-pointer"
+        *ngFor="let no of pagesNumberArray"
+        (click)="onPage(no)"
+      >
+        <a class="page-link" [ngClass]="{ active: activePage == no }">{{
+          no
+        }}</a>
+      </li>
+      <li
+        class="page-item cursor-pointer"
+        [ngClass]="{ disabled: activePage == pagesNumberArray.length }"
+      >
+        <a class="page-link" (click)="onForward()">Next</a>
+      </li>
+    </ul>
+  </nav>
 </div>

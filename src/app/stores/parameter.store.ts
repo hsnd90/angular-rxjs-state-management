@@ -8,14 +8,17 @@ export class ParameterStore extends Store<Parameter, ObjectStore> {
   constructor() {
     super({
       operation: null,
-      value: {
-        favoriteProductCount: 8,
-      },
+      value: undefined,
+    });
+    this.load({
+      favoriteProductCount: 8,
+      rowsPerPage: 10,
     });
     console.log('ParameterStore created');
   }
 }
 
-interface Parameter {
+export interface Parameter {
   favoriteProductCount: number;
+  rowsPerPage: number;
 }

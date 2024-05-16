@@ -31,17 +31,22 @@ export class Store<T, U> {
     );
 
   /**
-   * @param value - Asenkron işlemlerden gelen veriyi store'a yükler. Saklanan veri Array ise ArrayStore, Object ise ObjectStore tipinde olmalıdır.
+   * @description Store'a veri yükler. Store daha önce yüklenmişse çalışmaz.
+   * @param value - Saklanan veri Array ise ArrayStore, Object ise ObjectStore tipinde olmalıdır.
    */
-  load(value: U): void {
+  load(value: U extends ArrayStore ? T[] : T): void {
     if ((this.subject.value as any).hasOwnProperty('values')) {
       if ((this.subject.value as any).values.length > 0) {
         return;
       } else {
-        this.subject.next(value);
+        this.subject.next({
+          operation: 'loaded',
+          value: null,
+          values: value,
+        } as any);
       }
     } else {
-      this.subject.next(value);
+      this.subject.next({ value, operation: 'loaded' } as any);
     }
   }
 
