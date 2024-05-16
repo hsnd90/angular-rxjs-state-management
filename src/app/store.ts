@@ -1,5 +1,8 @@
 import { BehaviorSubject } from 'rxjs';
-
+/**
+ * @typeParam T - Store'da saklanacak verinin tipi veya modeli.
+ * @typeParam U - Store tipi. ArrayStore veya ObjectStore olabilir.
+ */
 export class Store<T, U> {
   constructor(private initialValue: any) {}
 

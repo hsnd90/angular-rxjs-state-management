@@ -7,7 +7,7 @@ import { ProductStore } from './product.store';
   providedIn: 'root',
 })
 export class OrderStore extends Store<Order, ArrayStore> {
-  productStore: ProductStore;
+  private productStore: ProductStore;
 
   constructor() {
     super({ operation: null, value: null, values: [] });

@@ -1,5 +1,5 @@
-<div class="order container mt-1" *ngFor="let order of orders">
-  <div class="card mt-1">
+<div class="order container mt-1" *ngIf="orders.length > 0">
+  <div class="card mt-1" *ngFor="let order of orders">
     <div class="card-header d-flex justify-content-between">
       <p class="m-0 p-0">Sipariş No: {{ order.id }}</p>
       <p class="m-0 p-0">Adres: {{ order.address }}</p>
@@ -19,4 +19,12 @@
       </div>
     </div>
   </div>
+</div>
+
+<div
+  class="container alert alert-danger text-center mt-1 "
+  role="alert"
+  *ngIf="orders.length == 0"
+>
+  Sipariş yok!
 </div>
