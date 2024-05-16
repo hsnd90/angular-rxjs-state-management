@@ -9,6 +9,6 @@ export class CategoryService {
   constructor() {}
 
   async getCategories() {
-    return of(categories).pipe(delay(750));
+    return of(categories).pipe(delay(150));
   }
 }

@@ -11,9 +11,9 @@ import { ProductStore } from '../stores/product.store';
 })
 export class BasketDetailComponent implements OnDestroy {
   baskets: Basket[] = [];
-  basketStore: InstanceType<typeof BasketStore> = inject(BasketStore);
-  productStore: InstanceType<typeof ProductStore> = inject(ProductStore);
-  orderStore: InstanceType<typeof OrderStore> = inject(OrderStore);
+  readonly basketStore: InstanceType<typeof BasketStore> = inject(BasketStore);
+  readonly productStore: InstanceType<typeof ProductStore> = inject(ProductStore);
+  readonly orderStore: InstanceType<typeof OrderStore> = inject(OrderStore);
 
   constructor() {
     this.getBaskets();
@@ -29,7 +29,9 @@ export class BasketDetailComponent implements OnDestroy {
       totalPrice: this.getTotalPrice(),
       baskets: this.baskets,
     });
+
     this.basketStore.clearBasket();
+
     this.getBaskets();
   }
 

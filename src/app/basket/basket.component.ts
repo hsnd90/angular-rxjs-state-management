@@ -10,7 +10,7 @@ export class BasketComponent {
   basketStore: InstanceType<typeof BasketStore> = inject(BasketStore);
 
   constructor() {
-    this.basketStore.onChanged$.subscribe((data: any) => {
+    this.basketStore.onChanged$().subscribe((data: any) => {
       this.productCount = data.values.length;
     });
   }

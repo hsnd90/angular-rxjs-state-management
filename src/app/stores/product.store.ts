@@ -22,8 +22,8 @@ export class ProductStore extends Store<Product, ArrayStore> {
   }
 
   addProduct(product: Product) {
-    let currentState = this.getState();
-    this.setState({
+    let currentState = this.state;
+    this.patchState({
       operation: ProductOperation.ADDED,
       value: product,
       values: [...currentState, { id: currentState.length + 1, ...product }],
@@ -31,25 +31,21 @@ export class ProductStore extends Store<Product, ArrayStore> {
   }
 
   incrementQuantitySold(product: Product, quantity: number) {
-    let store = this.getState();
+    let store = this.state;
     const index = store.findIndex((p) => p.id === product.id);
     store[index].quantitySold = store[index].quantitySold + quantity;
-    this.setState({
-      operation: ProductOperation.INCREMENT_QUANTITY,
+    this.patchState({
+      operation: ProductOperation.INCREMENT_QUANTITY_SOLD,
       value: store[index],
       values: store,
     });
   }
 
   favoriteProducts() {
-    let topProducts = [...this.getState()];
+    let topProducts = [...this.state];
     return topProducts
       .sort((a, b) => b.quantitySold - a.quantitySold)
       .filter((product, index) => index < 10);
-  }
-
-  count() {
-    return this.getState().length;
   }
 }
 
@@ -57,6 +53,7 @@ export enum ProductOperation {
   LOADED = 'loaded',
   ADDED = 'added',
   INCREMENT_QUANTITY = 'increment_quantity',
+  INCREMENT_QUANTITY_SOLD = 'increment_quantity_sold',
   DECREMENT_QUANTITY = 'decrement_quantity',
   REMOVED = 'removed',
   CLEARED = 'cleared',

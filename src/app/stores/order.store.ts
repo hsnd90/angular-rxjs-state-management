@@ -15,26 +15,23 @@ export class OrderStore extends Store<Order, ArrayStore> {
   }
 
   addOrder(order: Order) {
-    order.id = this.getState().length + 1;
+    order.id = this.state.length + 1;
     order.baskets.forEach((basket: any) => {
       this.productStore.incrementQuantitySold(basket.product!, basket.quantity);
     });
-    this.setState({
-      operation:OrderOperation.ADDED,
+    this.patchState({
+      operation: OrderOperation.ADDED,
       value: order,
-      values: [...this.getState(), order],
+      values: [...this.state, order],
     });
   }
 
   getOrders() {
-    return this.getState();
+    return this.state;
   }
 }
 
-enum OrderOperation {
+export enum OrderOperation {
   ADDED = 'added',
-  INCREMENT_QUANTITY = 'increment_quantity',
-  DECREMENT_QUANTITY = 'decrement_quantity',
-  REMOVED = 'removed',
-  CLEARED = 'cleared',
+  CANCELED = 'canceled',
 }

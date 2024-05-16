@@ -1,34 +1,56 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { ProductStore } from './stores/product.store';
-import { BasketStore } from './stores/basket.store';
-import { OrderStore } from './stores/order.store';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ProductOperation, ProductStore } from './stores/product.store';
+import { BasketOperation, BasketStore } from './stores/basket.store';
+import { OrderOperation, OrderStore } from './stores/order.store';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnDestroy {
   private readonly productStore: InstanceType<typeof ProductStore>;
   private readonly orderStore: InstanceType<typeof OrderStore>;
   private readonly basketStore: InstanceType<typeof BasketStore>;
+  productStoreChangedSubscription$: Subscription;
+  orderStoreChangedSubscription$: Subscription;
+  basketStoreDecrementChangedSubscription$: Subscription;
+  basketStoreIncrementChangedSubscription$: Subscription;
 
   constructor() {
     this.productStore = inject(ProductStore);
     this.orderStore = inject(OrderStore);
     this.basketStore = inject(BasketStore);
 
-    this.basketStore.onChanged$.subscribe((data) => {
-      console.log('Basket Store Event', data);
-    });
+    this.basketStoreDecrementChangedSubscription$ = this.basketStore
+      .onChanged$(BasketOperation.DECREMENT_QUANTITY)
+      .subscribe((data) => {
+        console.log('Sepetten ürün silindi', data);
+      });
 
-    this.orderStore.onChanged$.subscribe((data) => {
-      console.log('Order Store Event', data);
-    });
+    this.basketStoreIncrementChangedSubscription$ = this.basketStore
+      .onChanged$([BasketOperation.INCREMENT_QUANTITY, BasketOperation.ADDED])
+      .subscribe((data) => {
+        console.log('Sepete ürün eklendi.', data);
+      });
 
-    this.productStore.onChanged$.subscribe((data) => {
-      console.log('Product Store Event', data);
-    });
+    this.orderStoreChangedSubscription$ = this.orderStore
+      .onChanged$(OrderOperation.ADDED)
+      .subscribe((data) => {
+        console.log('Sipariş oluşturuldu.', data);
+      });
+
+    this.productStoreChangedSubscription$ = this.productStore
+      .onChanged$(ProductOperation.ADDED)
+      .subscribe((data) => {
+        console.log('Yeni ürün eklendi.', data);
+      });
   }
-  async ngOnInit() {}
+  ngOnDestroy(): void {
+    this.basketStoreIncrementChangedSubscription$.unsubscribe();
+    this.basketStoreDecrementChangedSubscription$.unsubscribe();
+    this.orderStoreChangedSubscription$.unsubscribe();
+    this.productStoreChangedSubscription$.unsubscribe();
+  }
 }

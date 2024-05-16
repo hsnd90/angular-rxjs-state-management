@@ -15,7 +15,7 @@ export class FavoriteListComponent {
   favoriteProducts: Product[] = [];
 
   constructor() {
-    this.productStore.onChanged$.subscribe((data) => {
+    this.productStore.onChanged$().subscribe((data) => {
       if (data.operation == ProductOperation.LOADED) {
         this.favoriteProducts = this.productStore.favoriteProducts();
       }

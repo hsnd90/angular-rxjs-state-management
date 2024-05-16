@@ -11,41 +11,42 @@ export class BasketStore extends Store<Basket, ArrayStore> {
   }
 
   addBasket(product: Basket) {
-    let ifExistIndex = this.getState().findIndex(
+    let baskets = this.state;
+    let ifExistIndex = baskets.findIndex(
       (item: any) => item.productid === product.productid
     );
 
     if (ifExistIndex > -1) {
-      let product = this.getState()[ifExistIndex];
+      let product = baskets[ifExistIndex];
       product.quantity = product.quantity + 1;
-      this.setState({
+      this.patchState({
         operation: BasketOperation.INCREMENT_QUANTITY,
         value: product,
-        values: [...this.getState()],
+        values: [...baskets],
       });
     } else {
-      this.setState({
+      this.patchState({
         operation: BasketOperation.ADDED,
         value: product,
-        values: [...this.getState(), product],
+        values: [...baskets, product],
       });
     }
   }
 
   removeBasket(product: Basket) {
-    let index = this.getState().indexOf(product);
-    let removedProduct = { ...this.getState()[index] };
-    let baskets = this.getState();
+    let baskets = this.state;
+    let index = baskets.findIndex((p) => p.productid == product.productid);
+    let removedProduct = structuredClone(baskets[index]);
     if (baskets[index].quantity > 1) {
-      baskets[index].quantity = this.getState()[index].quantity - 1;
-      this.setState({
+      baskets[index].quantity = baskets[index].quantity - 1;
+      this.patchState({
         operation: BasketOperation.DECREMENT_QUANTITY,
         value: removedProduct,
         values: [...baskets],
       });
     } else {
       baskets.splice(index, 1);
-      this.setState({
+      this.patchState({
         operation: BasketOperation.REMOVED,
         value: removedProduct,
         values: [...baskets],
@@ -58,11 +59,11 @@ export class BasketStore extends Store<Basket, ArrayStore> {
   }
 
   getBaskets() {
-    return this.getState();
+    return this.state;
   }
 }
 
-enum BasketOperation {
+export enum BasketOperation {
   ADDED = 'added',
   INCREMENT_QUANTITY = 'increment_quantity',
   DECREMENT_QUANTITY = 'decrement_quantity',

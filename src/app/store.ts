@@ -1,10 +1,12 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, filter, Observable } from 'rxjs';
 /**
  * @typeParam T - Store'da saklanacak verinin tipi veya modeli.
  * @typeParam U - Store tipi. ArrayStore veya ObjectStore olabilir.
  */
 export class Store<T, U> {
-  constructor(private initialValue: any) {}
+  constructor(private initialValue: any) {
+    this.initialValue.operation = 'initialized';
+  }
 
   private readonly subject: BehaviorSubject<U> = new BehaviorSubject<U>(
     this.initialValue
@@ -14,7 +16,19 @@ export class Store<T, U> {
    * @description Store'daki veri değiştiğinde tetiklenir.
    * @returns ArrayStore veya ObjectStore tipinde veri döner.
    */
-  readonly onChanged$: Observable<U> = this.subject.asObservable();
+  readonly onChanged$ = (operations?: string | string[]) =>
+    (this.subject.asObservable() as Observable<U>).pipe(
+      filter((data: any) => {
+        if (operations) {
+          if (Array.isArray(operations)) {
+            return operations.includes(data.operation);
+          } else {
+            return data.operation === operations;
+          }
+        }
+        return data;
+      })
+    );
 
   /**
    * @param value - Asenkron işlemlerden gelen veriyi store'a yükler. Saklanan veri Array ise ArrayStore, Object ise ObjectStore tipinde olmalıdır.
@@ -35,11 +49,13 @@ export class Store<T, U> {
    * @description Store'daki veriyi döner.
    * @returns
    */
-  getState(): StoreValueType<T, U> {
+  get state(): StoreValueType<T, U> {
     if ((this.subject.value as any).hasOwnProperty('values')) {
-      return [...(this.subject.value as any).values] as StoreValueType<T, U>;
+      return structuredClone(
+        (this.subject.getValue() as any).values
+      ) as StoreValueType<T, U>;
     } else {
-      return { ...this.subject.value } as StoreValueType<T, U>;
+      return structuredClone(this.subject.getValue()) as StoreValueType<T, U>;
     }
   }
 
@@ -47,12 +63,23 @@ export class Store<T, U> {
    * @description Store'daki veriyi günceller.
    * @param value - Saklanan veri Array ise ArrayStore, Object ise ObjectStore tipinde olmalıdır.
    */
-  setState(value: U): void {
+  patchState(value: U): void {
     this.subject.next(value);
   }
 
   /**
-   * Store'daki tüm veriyi temizler.
+   * @description Store'daki veri sayısını döner.
+   */
+  get count(): U extends ArrayStore ? number : undefined {
+    if ((this.subject.value as any).hasOwnProperty('values')) {
+      return (this.subject.getValue() as any).values.length;
+    } else {
+      return undefined as U extends ArrayStore ? number : undefined;
+    }
+  }
+
+  /**
+   * @description Store'daki tüm veriyi temizler.
    */
   clearState(): void {
     if ((this.subject.value as any).hasOwnProperty('values')) {
