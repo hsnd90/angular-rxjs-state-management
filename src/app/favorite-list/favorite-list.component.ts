@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ProductStore } from '../stores/product.store';
+import { ProductOperation, ProductStore } from '../stores/product.store';
 import { Product } from '../models/product.model';
 import { NgFor } from '@angular/common';
 
@@ -15,6 +15,11 @@ export class FavoriteListComponent {
   favoriteProducts: Product[] = [];
 
   constructor() {
+    this.productStore.onChanged$.subscribe((data) => {
+      if (data.operation == ProductOperation.LOADED) {
+        this.favoriteProducts = this.productStore.favoriteProducts();
+      }
+    });
     this.favoriteProducts = this.productStore.favoriteProducts();
   }
 }

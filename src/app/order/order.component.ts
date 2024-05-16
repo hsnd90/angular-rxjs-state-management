@@ -9,8 +9,9 @@ import { OrderStore } from '../stores/order.store';
 })
 export class OrderComponent implements OnDestroy {
   orders: Order[] = [];
+  orderStore: InstanceType<typeof OrderStore> = inject(OrderStore);
 
-  constructor(private orderStore: OrderStore) {
+  constructor() {
     this.orders = this.orderStore.getOrders();
   }
 

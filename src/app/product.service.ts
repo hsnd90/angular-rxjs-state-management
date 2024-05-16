@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { products } from './products';
+import { delay, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,6 @@ export class ProductService {
   constructor() {}
 
   getProducts() {
-    return products;
+    return of(products).pipe(delay(350));;
   }
 }

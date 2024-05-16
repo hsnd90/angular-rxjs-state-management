@@ -11,14 +11,12 @@ import { ProductStore } from '../stores/product.store';
 })
 export class BasketDetailComponent implements OnDestroy {
   baskets: Basket[] = [];
-  productStore: ProductStore;
+  basketStore: InstanceType<typeof BasketStore> = inject(BasketStore);
+  productStore: InstanceType<typeof ProductStore> = inject(ProductStore);
+  orderStore: InstanceType<typeof OrderStore> = inject(OrderStore);
 
-  constructor(
-    private basketStore: BasketStore,
-    private orderStore: OrderStore
-  ) {
+  constructor() {
     this.getBaskets();
-    this.productStore = inject(ProductStore);
   }
 
   getBaskets() {
@@ -32,7 +30,7 @@ export class BasketDetailComponent implements OnDestroy {
       baskets: this.baskets,
     });
     this.basketStore.clearBasket();
-    this.getBaskets()
+    this.getBaskets();
   }
 
   addBasket(basket: Basket) {

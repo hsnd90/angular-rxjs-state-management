@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { ProductService } from '../product.service';
 import { Product } from '../models/product.model';
 import { ArrayStore, Store } from '../store';
+import { lastValueFrom } from 'rxjs';
 
 export class ProductStore extends Store<Product, ArrayStore> {
   private productService: ProductService;
@@ -11,9 +12,9 @@ export class ProductStore extends Store<Product, ArrayStore> {
     this.productService = inject(ProductService);
   }
 
-  loadProducts() {
-    let products = this.productService.getProducts();
-    this.setState({
+  async loadProducts() {
+    let products = await lastValueFrom(this.productService.getProducts());
+    this.load({
       operation: ProductOperation.LOADED,
       value: products,
       values: products,
@@ -21,10 +22,11 @@ export class ProductStore extends Store<Product, ArrayStore> {
   }
 
   addProduct(product: Product) {
+    let currentState = this.getState();
     this.setState({
       operation: ProductOperation.ADDED,
       value: product,
-      values: [...this.getState(), product],
+      values: [...currentState, { id: currentState.length + 1, ...product }],
     });
   }
 
@@ -45,9 +47,13 @@ export class ProductStore extends Store<Product, ArrayStore> {
       .sort((a, b) => b.quantitySold - a.quantitySold)
       .filter((product, index) => index < 10);
   }
+
+  count() {
+    return this.getState().length;
+  }
 }
 
-enum ProductOperation {
+export enum ProductOperation {
   LOADED = 'loaded',
   ADDED = 'added',
   INCREMENT_QUANTITY = 'increment_quantity',

@@ -4,7 +4,7 @@ export const products = [
     name: 'Mushroom - White Button',
     price: 10,
     categoryId: 1,
-    quantitySold: 2,
+    quantitySold: 0,
   },
   { id: 2, name: 'Beer - Guiness', price: 20, categoryId: 1, quantitySold: 0 },
   {
@@ -19,7 +19,7 @@ export const products = [
     name: 'Munchies Honey Sweet Trail Mix',
     price: 40,
     categoryId: 1,
-    quantitySold: 3,
+    quantitySold: 0,
   },
   { id: 5, name: 'Cakes Assorted', price: 50, categoryId: 1, quantitySold: 0 },
   {

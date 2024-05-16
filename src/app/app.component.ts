@@ -20,11 +20,10 @@ export class AppComponent implements OnInit {
     this.basketStore = inject(BasketStore);
 
     this.basketStore.onChanged$.subscribe((data: any) => {
-      console.log('Added basket', data);
+      console.log('Basket Store Event', data);
     });
   }
   async ngOnInit() {
-    this.productStore.loadProducts();
     this.categoryStore.loadCategories();
   }
 }

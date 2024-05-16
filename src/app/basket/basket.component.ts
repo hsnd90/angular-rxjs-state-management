@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { BasketStore } from '../stores/basket.store';
 
 @Component({
@@ -7,7 +7,9 @@ import { BasketStore } from '../stores/basket.store';
   styleUrls: ['./basket.component.scss'],
 })
 export class BasketComponent {
-  constructor(private basketStore: BasketStore) {
+  basketStore: InstanceType<typeof BasketStore> = inject(BasketStore);
+
+  constructor() {
     this.basketStore.onChanged$.subscribe((data: any) => {
       this.productCount = data.values.length;
     });

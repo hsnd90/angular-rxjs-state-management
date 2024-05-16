@@ -8,20 +8,25 @@ import { BasketStore } from '../stores/basket.store';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
 })
-export class ListComponent {
+export class ListComponent implements OnInit {
   products: Product[] = [];
   productStore: InstanceType<typeof ProductStore> = inject(ProductStore);
-  basketStore: any = inject(BasketStore);
+  basketStore: InstanceType<typeof BasketStore> = inject(BasketStore);
 
-  constructor() {
+  constructor() {}
+  async ngOnInit() {
+    await this.productStore.loadProducts();
     this.products = this.productStore.getState();
+    this.productStore.onChanged$.subscribe((data: any) => {
+      this.productCount = this.productStore.count()
+    });
   }
 
-  productCount = this.productStore.getState().length;
+  productCount: number = 0;
 
   addProductToBasket(product: Product) {
     this.basketStore.addBasket({
-      productid: product.id,
+      productid: product.id!,
       quantity: 1,
       product: product,
     });
