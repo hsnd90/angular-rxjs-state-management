@@ -1,11 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ArrayStore, Store } from '../store';
 import { Basket } from '../models/basket.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BasketStore extends Store<Basket, ArrayStore> {
+  readonly toastrService: InstanceType<typeof ToastrService> = inject(ToastrService);
+
   constructor() {
     super({ operation: null, value: null, values: [] });
   }
@@ -31,6 +34,7 @@ export class BasketStore extends Store<Basket, ArrayStore> {
         values: [...baskets, product],
       });
     }
+    this.toastrService.success('Product added to basket');
   }
 
   removeBasket(product: Basket) {

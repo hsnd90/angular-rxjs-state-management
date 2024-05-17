@@ -13,6 +13,9 @@ import { ProductStore } from './stores/product.store';
 import { AddProductComponent } from './add-product/add-product.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ParameterStore } from './stores/parameter.store';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -29,9 +32,15 @@ import { ParameterStore } from './stores/parameter.store';
     AppRoutingModule,
     ProfileComponent,
     FavoriteListComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }),
+    BrowserAnimationsModule
   ],
-  providers: [ProductStore,ParameterStore],
+  providers: [ProductStore, ParameterStore],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -4,6 +4,7 @@ import { Product } from '../models/product.model';
 import { ArrayStore, Store } from '../store';
 import { lastValueFrom } from 'rxjs';
 import { ParameterStore } from './parameter.store';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ import { ParameterStore } from './parameter.store';
 export class ProductStore extends Store<Product, ArrayStore> {
   private productService: ProductService;
   private parameterStore: InstanceType<typeof ParameterStore>;
+  private toastrService:InstanceType<typeof ToastrService> = inject(ToastrService);
 
   constructor() {
     super({ operation: null, value: null, values: [] });
@@ -43,6 +45,7 @@ export class ProductStore extends Store<Product, ArrayStore> {
       value: product,
       values: [...currentState, { id: currentState.length + 1, ...product }],
     });
+    this.toastrService.success('Product added successfully');
   }
 
   incrementQuantitySold(product: Product, quantity: number) {

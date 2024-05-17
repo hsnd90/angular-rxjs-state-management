@@ -2,12 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { ArrayStore, Store } from '../store';
 import { Order } from '../models/order.model';
 import { ProductStore } from './product.store';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderStore extends Store<Order, ArrayStore> {
   private productStore: ProductStore;
+  private toastrService: ToastrService = inject(ToastrService);
 
   constructor() {
     super({ operation: null, value: null, values: [] });
@@ -24,6 +26,7 @@ export class OrderStore extends Store<Order, ArrayStore> {
       value: order,
       values: [...this.state, order],
     });
+    this.toastrService.success('Order added successfully');
   }
 
   getOrders() {
