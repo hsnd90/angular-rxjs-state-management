@@ -7,7 +7,8 @@ import { ToastrService } from 'ngx-toastr';
   providedIn: 'root',
 })
 export class BasketStore extends Store<Basket, ArrayStore> {
-  readonly toastrService: InstanceType<typeof ToastrService> = inject(ToastrService);
+  readonly toastrService: InstanceType<typeof ToastrService> =
+    inject(ToastrService);
 
   constructor() {
     super({ operation: null, value: null, values: [] });

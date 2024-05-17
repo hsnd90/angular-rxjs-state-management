@@ -1,0 +1,18 @@
+<div class="container mt-2">
+  <form [formGroup]="categoryForm">
+    <div class="input-group mb-3">
+      <label for="staticEmail" class="col-sm-2 col-form-label"
+        >Category Name</label
+      >
+      <input
+        formControlName="name"
+        type="text"
+        class="form-control"
+        placeholder="Category Name"
+        aria-label="Category Name"
+        aria-describedby="basic-addon1"
+      />
+    </div>
+  </form>
+  <button (click)="onSubmit()" class="btn btn-success">Save</button>
+</div>

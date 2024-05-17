@@ -1,24 +1,39 @@
-import { lastValueFrom } from 'rxjs';
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { Category } from '../models/category.model';
+import { Categories, Category } from '../models/category.model';
 import { CategoryService } from '../category.service';
 import { inject } from '@angular/core';
+import { ObjectStore, Store } from '../store';
+import { ToastrService } from 'ngx-toastr';
 
-type CategoryState = {
-  categories: Category[];
-};
+export class CategoryStore extends Store<Categories, ObjectStore> {
+  private categoryService: InstanceType<typeof CategoryService> =
+    inject(CategoryService);
+  private toastrService: ToastrService = inject(ToastrService);
 
-const initialState: CategoryState = {
-  categories: [],
-};
+  constructor() {
+    super({ operation: null, value: null });
+    this.loadCategories();
+  }
 
-export const CategoriesStore = signalStore(
-  { providedIn: 'root' },
-  withState(initialState),
-  withMethods((store, categoryService = inject(CategoryService)) => ({
-    async loadCategories() {
-      let categories = await lastValueFrom(await categoryService.getCategories());
-      patchState(store, { categories });
-    },
-  }))
-);
+  async loadCategories() {
+    this.categoryService.getCategories().subscribe((categories) => {
+      this.load({ categories: categories[0], subcategories: categories[1] });
+    });
+  }
+
+  addCategory(category: Category) {
+    let currentCategories = this.state;
+    category.id = currentCategories.categories.length + 1;
+    currentCategories.categories.push(category);
+
+    this.patchState({
+      operation: CategoryOperation.ADDED,
+      value: currentCategories,
+    });
+    this.toastrService.success('Category added successfully');
+  }
+}
+export enum CategoryOperation {
+  ADDED = 'ADDED',
+  REMOVED = 'REMOVED',
+  UPDATED = 'UPDATED',
+}

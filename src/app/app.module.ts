@@ -15,7 +15,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ParameterStore } from './stores/parameter.store';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { CategoryStore } from './stores/category.store';
+import { CategoryListComponent } from './category-list/category-list.component';
+import { AddCategoryComponent } from './add-category/add-category.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NavbarComponent,
     BasketDetailComponent,
     AddProductComponent,
+    CategoryListComponent,
+    AddCategoryComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,9 +42,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
-  providers: [ProductStore, ParameterStore],
+  providers: [ProductStore, ParameterStore, CategoryStore],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

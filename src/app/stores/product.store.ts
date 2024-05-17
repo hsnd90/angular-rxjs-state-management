@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import { ProductService } from '../product.service';
 import { Product } from '../models/product.model';
 import { ArrayStore, Store } from '../store';
-import { lastValueFrom } from 'rxjs';
 import { ParameterStore } from './parameter.store';
 import { ToastrService } from 'ngx-toastr';
 
@@ -12,20 +11,24 @@ import { ToastrService } from 'ngx-toastr';
 export class ProductStore extends Store<Product, ArrayStore> {
   private productService: ProductService;
   private parameterStore: InstanceType<typeof ParameterStore>;
-  private toastrService:InstanceType<typeof ToastrService> = inject(ToastrService);
+  private toastrService: InstanceType<typeof ToastrService> =
+    inject(ToastrService);
 
   constructor() {
     super({ operation: null, value: null, values: [] });
     this.productService = inject(ProductService);
     this.parameterStore = inject(ParameterStore);
+    this.loadProducts();
   }
 
   async loadProducts() {
-    let products = await lastValueFrom(this.productService.getProducts());
-    this.load(products);
+    this.productService.getProducts().subscribe((products) => {
+      this.load(products);
+      console.log('products loaded');
+    });
   }
 
-  getAll(){
+  getAll() {
     return this.state;
   }
 

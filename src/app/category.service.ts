@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { categories } from './category';
-import { delay, of } from 'rxjs';
+import { categories, subcategories } from './category';
+import { delay, forkJoin, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +8,10 @@ import { delay, of } from 'rxjs';
 export class CategoryService {
   constructor() {}
 
-  async getCategories() {
-    return of(categories).pipe(delay(150));
+  getCategories(): Observable<any> {
+    return forkJoin([
+      of(categories).pipe(delay(150)),
+      of(subcategories).pipe(delay(150)),
+    ]);
   }
 }

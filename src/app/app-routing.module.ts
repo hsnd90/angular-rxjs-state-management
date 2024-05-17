@@ -4,6 +4,8 @@ import { ListComponent } from './list/list.component';
 import { OrderComponent } from './order/order.component';
 import { BasketDetailComponent } from './basket-detail/basket-detail.component';
 import { AddProductComponent } from './add-product/add-product.component';
+import { CategoryListComponent } from './category-list/category-list.component';
+import { AddCategoryComponent } from './add-category/add-category.component';
 
 const routes: Routes = [
   {
@@ -22,6 +24,14 @@ const routes: Routes = [
   {
     path: 'order',
     component: OrderComponent,
+  },
+  {
+    path: 'categories',
+    component: CategoryListComponent,
+  },
+  {
+    path: 'add-category',
+    component: AddCategoryComponent,
   },
   {
     path: 'basket-detail',

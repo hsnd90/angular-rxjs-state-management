@@ -1,10 +1,10 @@
 import { ProductStore } from './../stores/product.store';
 import { Component, inject, OnInit } from '@angular/core';
-import { CategoriesStore } from '../stores/category.store';
 import { Category } from '../models/category.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { CategoryStore } from '../stores/category.store';
 
 @Component({
   selector: 'app-add-product',
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent implements OnInit {
-  categoryStore: InstanceType<typeof CategoriesStore> = inject(CategoriesStore);
+  categoryStore: InstanceType<typeof CategoryStore> = inject(CategoryStore);
   productStore: InstanceType<typeof ProductStore> = inject(ProductStore);
   toastrService: InstanceType<typeof ToastrService> = inject(ToastrService);
   categories: Category[] = [];
@@ -25,8 +25,9 @@ export class AddProductComponent implements OnInit {
   constructor(private router: Router) {}
 
   async ngOnInit() {
-    await this.categoryStore.loadCategories();
-    this.categories = this.categoryStore.categories();
+    this.categoryStore.watch('categories').subscribe((data) => {
+      this.categories = data;
+    });
   }
 
   onSubmit() {

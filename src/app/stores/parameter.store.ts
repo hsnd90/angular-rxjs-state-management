@@ -11,10 +11,9 @@ export class ParameterStore extends Store<Parameter, ObjectStore> {
       value: undefined,
     });
     this.load({
-      favoriteProductCount: 8,
+      favoriteProductCount: 7,
       rowsPerPage: 10,
     });
-    console.log('ParameterStore created');
   }
 }
 
