@@ -24,7 +24,6 @@ export class ProductStore extends Store<Product, ArrayStore> {
   async loadProducts() {
     this.productService.getProducts().subscribe((products) => {
       this.load(products);
-      console.log('products loaded');
     });
   }
 

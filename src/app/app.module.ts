@@ -11,7 +11,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { FavoriteListComponent } from './favorite-list/favorite-list.component';
 import { ProductStore } from './stores/product.store';
 import { AddProductComponent } from './add-product/add-product.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ParameterStore } from './stores/parameter.store';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,6 +37,8 @@ import { AddCategoryComponent } from './add-category/add-category.component';
     ProfileComponent,
     FavoriteListComponent,
     ReactiveFormsModule,
+    ReactiveFormsModule,
+    FormsModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-bottom-right',

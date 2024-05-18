@@ -8,7 +8,7 @@
     </button>
     <p class="p-o m-0">
       <i>
-        <b>{{ productCount }}</b> adet ürün listelenmektedir.
+        <b>{{ productStore.count }}</b> adet ürün listelenmektedir.
       </i>
     </p>
   </div>
@@ -37,14 +37,21 @@
       </tr>
     </tbody>
   </table>
-  <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-      <li class="page-item cursor-pointer" [ngClass]="{ disabled: activePage == 1 }">
+  <nav
+    *ngIf="productStore.count > 0"
+    aria-label="Page navigation example"
+    class="d-flex flex-row align-items-center justify-content-center"
+  >
+    <ul class="pagination justify-content-center m-0">
+      <li
+        class="page-item cursor-pointer"
+        [ngClass]="{ disabled: activePage == 1 }"
+      >
         <a class="page-link" (click)="onPrevious()">Previous</a>
       </li>
       <li
         class="page-item cursor-pointer"
-        *ngFor="let no of pagesNumberArray"
+        *ngFor="let no of pagesNumberAsArray"
         (click)="onPage(no)"
       >
         <a class="page-link" [ngClass]="{ active: activePage == no }">{{
@@ -53,10 +60,20 @@
       </li>
       <li
         class="page-item cursor-pointer"
-        [ngClass]="{ disabled: activePage == pagesNumberArray.length }"
+        [ngClass]="{ disabled: activePage == pagesNumberAsArray.length }"
       >
         <a class="page-link" (click)="onForward()">Next</a>
       </li>
     </ul>
+    <select
+      class="form-select m-0 ms-1"
+      style="width: 80px"
+      [(ngModel)]="rowsPerPage"
+      (change)="onRowsPerPageChange()"
+    >
+      <option [value]="10">10</option>
+      <option [value]="25">25</option>
+      <option [value]="50">50</option>
+    </select>
   </nav>
 </div>

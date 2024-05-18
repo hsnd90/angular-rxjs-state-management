@@ -1,0 +1,31 @@
+{
+  "products": [
+    { "id": 1, "name": "Produce", "parentId": null },
+    { "id": 2, "name": "Dairy", "parentId": null },
+    { "id": 3, "name": "Meat", "parentId": null },
+    { "id": 4, "name": "Beverages", "parentId": null },
+    { "id": 5, "name": "Seafood", "parentId": null },
+    { "id": 6, "name": "Fruits", "parentId": 1 },
+    { "id": 7, "name": "Vegetables", "parentId": 1 },
+    { "id": 8, "name": "Dairy", "parentId": 2 },
+    { "id": 9, "name": "Meat", "parentId": 3 },
+    { "id": 10, "name": "Beverages", "parentId": 4 },
+    { "id": 11, "name": "Seafood", "parentId": 5 },
+    { "id": 12, "name": "Apples", "parentId": 6 },
+    { "id": 13, "name": "Oranges", "parentId": 6 },
+    { "id": 14, "name": "Bananas", "parentId": 6 },
+    { "id": 15, "name": "Carrots", "parentId": 7 },
+    { "id": 16, "name": "Broccoli", "parentId": 7 },
+    { "id": 17, "name": "Milk", "parentId": 8 },
+    { "id": 18, "name": "Cheese", "parentId": 8 },
+    { "id": 19, "name": "Beef", "parentId": 9 },
+    { "id": 20, "name": "Chicken", "parentId": 9 },
+    { "id": 21, "name": "Pork", "parentId": 9 },
+    { "id": 22, "name": "Soda", "parentId": 10 },
+    { "id": 23, "name": "Juice", "parentId": 10 },
+    { "id": 24, "name": "Water", "parentId": 10 },
+    { "id": 25, "name": "Salmon", "parentId": 11 },
+    { "id": 26, "name": "Tuna", "parentId": 11 },
+    { "id": 27, "name": "Shrimp", "parentId": 11 }
+  ]
+}

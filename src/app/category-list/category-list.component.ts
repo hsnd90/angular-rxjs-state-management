@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Category } from '../models/category.model';
 import { CategoryStore } from '../stores/category.store';
 
@@ -18,13 +18,5 @@ export class CategoryListComponent {
     });
   }
 
-  addCategory() {}
-
   editCategory(category: Category) {}
-
-  onPrevious() {}
-
-  onForward() {}
-
-  onPage(pageNumber: number) {}
 }

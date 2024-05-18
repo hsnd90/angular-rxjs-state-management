@@ -51,8 +51,10 @@ export class Store<T, U> {
   protected load(value: U extends ArrayStore ? T[] : T): void {
     if (this.storeType === StroreType.ArrayStore) {
       if ((this.subject.value as any).values.length > 0) {
+        console.log('Store already loaded')
         return;
       } else {
+        console.log('Store loaded')
         this.subject.next({
           operation: 'loaded',
           value: null,
