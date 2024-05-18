@@ -15,12 +15,12 @@ export class AddCategoryComponent {
     name: new FormControl('', Validators.required),
   });
 
-  constructor(private location:Location) {}
+  constructor(private location: Location) {}
 
   onSubmit() {
     if (this.categoryForm.valid) {
       this.categoryStore.addCategory({
-        name: this.categoryForm.value.name!,
+        Name: this.categoryForm.value.name!,
       });
       this.categoryForm.reset();
       this.location.back();

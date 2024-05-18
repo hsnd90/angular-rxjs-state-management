@@ -1,11 +1,9 @@
 export interface Category {
-  id?: number;
-  name: string;
-  description?: string;
-  parentId?: number;
+  _id?: string;
+  Name: string;
+  Parent?: Category;
 }
 
-export interface Categories{
+export interface Categories {
   categories: Category[];
-  subcategories: Category[];
 }

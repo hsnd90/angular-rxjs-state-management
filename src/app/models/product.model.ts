@@ -1,10 +1,11 @@
-import { Category } from "./category.model";
+import { Category } from './category.model';
 
 export interface Product {
+  _id?: string;
   id?: number;
-  name: string;
-  price: number;
-  categoryId: number;
-  quantitySold: number;
-  category?:Category
+  Name: string;
+  Code: string;
+  UnitPrice: number;
+  Category: Category | any;
+  QuantitySold?: number;
 }

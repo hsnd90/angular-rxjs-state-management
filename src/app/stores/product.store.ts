@@ -42,18 +42,20 @@ export class ProductStore extends Store<Product, ArrayStore> {
 
   addProduct(product: Product) {
     let currentState = this.state;
-    this.patchState({
-      operation: ProductOperation.ADDED,
-      value: product,
-      values: [...currentState, { id: currentState.length + 1, ...product }],
+    this.productService.addProduct(product).subscribe((product) => {
+      this.patchState({
+        operation: ProductOperation.ADDED,
+        value: product,
+        values: [...currentState, { id: currentState.length + 1, ...product }],
+      });
+      this.toastrService.success('Product added successfully');
     });
-    this.toastrService.success('Product added successfully');
   }
 
   incrementQuantitySold(product: Product, quantity: number) {
     let store = this.state;
     const index = store.findIndex((p) => p.id === product.id);
-    store[index].quantitySold = store[index].quantitySold + quantity;
+    store[index].QuantitySold = store[index].QuantitySold ?? 0 + quantity;
     this.patchState({
       operation: ProductOperation.INCREMENT_QUANTITY_SOLD,
       value: store[index],
@@ -66,8 +68,38 @@ export class ProductStore extends Store<Product, ArrayStore> {
     let favoriteCount = parameters.favoriteProductCount;
     let topProducts = [...this.state];
     return topProducts
-      .sort((a, b) => b.quantitySold - a.quantitySold)
+      .sort((a, b) => b.QuantitySold ?? 0 - a.QuantitySold!)
       .filter((product, index) => index < favoriteCount);
+  }
+
+  deleteProduct(id: string) {
+    let currentState = this.state;
+    this.productService.deleteProduct(id).subscribe((product) => {
+      this.patchState({
+        operation: ProductOperation.REMOVED,
+        value: product,
+        values: currentState.filter((p) => p._id !== id),
+      });
+      this.toastrService.warning('Product deleted successfully');
+    });
+  }
+
+  editProduct(product: Product) {
+    let store = this.state;
+    const index = store.findIndex((p) => p.id === product.id);
+    this.productService.updateProduct(product).subscribe((product) => {
+      store[index] = product;
+      this.patchState({
+        operation: ProductOperation.ADDED,
+        value: product,
+        values: store,
+      });
+      this.toastrService.success('Product updated successfully');
+    });
+  }
+
+  getProduct(id: string) {
+    return this.state.find((product) => product._id === id);
   }
 }
 

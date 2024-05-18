@@ -2,9 +2,10 @@ import { ProductStore } from './../stores/product.store';
 import { Component, inject, OnInit } from '@angular/core';
 import { Category } from '../models/category.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryStore } from '../stores/category.store';
+import { Product } from '../models/product.model';
 
 @Component({
   selector: 'app-add-product',
@@ -17,12 +18,27 @@ export class AddProductComponent implements OnInit {
   toastrService: InstanceType<typeof ToastrService> = inject(ToastrService);
   categories: Category[] = [];
   productForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    price: new FormControl(null, [Validators.required]),
-    categoryId: new FormControl(0, [Validators.required, Validators.min(1)]),
+    Name: new FormControl('', Validators.required),
+    Code: new FormControl('', Validators.required),
+    UnitPrice: new FormControl(0, [Validators.required]),
+    Category: new FormControl('', [Validators.required, Validators.min(1)]),
   });
+  id: string = '';
+  product?: Product;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+    this.id = this.activatedRoute.snapshot.params['id'];
+
+    if (this.id) {
+      this.product = this.productStore.state.find((p) => p._id === this.id);
+      this.productForm.patchValue({
+        Name: this.product?.Name,
+        Code: this.product?.Code,
+        UnitPrice: this.product?.UnitPrice,
+        Category: this.product?.Category?._id,
+      });
+    }
+  }
 
   async ngOnInit() {
     this.categoryStore.watch('categories').subscribe((data) => {
@@ -32,14 +48,27 @@ export class AddProductComponent implements OnInit {
 
   onSubmit() {
     if (this.productForm.valid) {
-      this.productStore.addProduct({
-        name: this.productForm.value.name!,
-        price: this.productForm.value.price!,
-        categoryId: this.productForm.value.categoryId!,
-        quantitySold: 0,
-      });
-      this.productForm.reset();
-      this.router.navigate(['/list']);
+      if (this.id) {
+        this.productStore.editProduct({
+          ...this.product!,
+          Name: this.productForm.value.Name!,
+          Code: this.productForm.value.Code!,
+          UnitPrice: this.productForm.value.UnitPrice!,
+          Category: this.productForm.value.Category!,
+        });
+        this.productForm.reset();
+        this.router.navigate(['/list']);
+      } else {
+        this.productStore.addProduct({
+          Name: this.productForm.value.Name!,
+          Code: this.productForm.value.Code!,
+          UnitPrice: this.productForm.value.UnitPrice!,
+          Category: this.productForm.value.Category!,
+          QuantitySold: 0,
+        });
+        this.productForm.reset();
+        this.router.navigate(['/list']);
+      }
     } else {
       this.toastrService.error('Please fill in the form');
     }

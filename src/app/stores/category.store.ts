@@ -16,13 +16,12 @@ export class CategoryStore extends Store<Categories, ObjectStore> {
 
   async loadCategories() {
     this.categoryService.getCategories().subscribe((categories) => {
-      this.load({ categories: categories[0], subcategories: categories[1] });
+      this.load({ categories: categories });
     });
   }
 
   addCategory(category: Category) {
     let currentCategories = this.state;
-    category.id = currentCategories.categories.length + 1;
     currentCategories.categories.push(category);
 
     this.patchState({

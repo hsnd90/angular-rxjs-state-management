@@ -5,7 +5,7 @@
         >Product Name</label
       >
       <input
-        formControlName="name"
+        formControlName="Name"
         type="text"
         class="form-control"
         placeholder="Product Name"
@@ -14,22 +14,35 @@
       />
     </div>
     <div class="input-group mb-3">
+      <label for="staticEmail" class="col-sm-2 col-form-label"
+        >Product Code</label
+      >
+      <input
+        formControlName="Code"
+        type="text"
+        class="form-control"
+        placeholder="Product Code"
+        aria-label="Product Code"
+        aria-describedby="basic-addon1"
+      />
+    </div>
+    <div class="input-group mb-3">
       <label for="staticEmail" class="col-sm-2 col-form-label">Category</label>
       <select
         class="form-select"
         aria-label="Default select example"
-        formControlName="categoryId"
+        formControlName="Category"
       >
         <option value="0" selected disabled>Select category...</option>
-        <option *ngFor="let category of categories" [value]="category.id">
-          {{ category.name }}
+        <option *ngFor="let category of categories" [value]="category._id">
+          {{ category.Name }}
         </option>
       </select>
     </div>
     <div class="input-group mb-3">
       <label for="staticEmail" class="col-sm-2 col-form-label">Price</label>
       <input
-        formControlName="price"
+        formControlName="UnitPrice"
         type="number"
         class="form-control"
         placeholder="Price"

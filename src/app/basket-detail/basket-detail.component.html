@@ -14,10 +14,10 @@
       <tbody>
         <tr *ngFor="let b of baskets; let i = index">
           <td>{{ i + 1 }}</td>
-          <td>{{ b.product?.name }}</td>
+          <td>{{ b.product?.Name }}</td>
           <td>{{ b.quantity }}</td>
-          <td>{{ b.product?.price }}</td>
-          <td>{{ b.quantity * b.product?.price! }}</td>
+          <td>{{ b.product?.UnitPrice }}</td>
+          <td>{{ b.quantity * b.product?.UnitPrice! }}</td>
           <td class="d-flex gap-1">
             <span
               class="rounded-circle bg-success text-white p-1 cursor-pointer chip"

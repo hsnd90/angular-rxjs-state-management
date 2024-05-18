@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CategoryStore } from './stores/category.store';
 import { CategoryListComponent } from './category-list/category-list.component';
 import { AddCategoryComponent } from './add-category/add-category.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { AddCategoryComponent } from './add-category/add-category.component';
     AddCategoryComponent,
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     ProfileComponent,

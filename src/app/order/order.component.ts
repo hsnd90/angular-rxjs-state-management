@@ -17,7 +17,7 @@ export class OrderComponent implements OnDestroy {
 
   getTotalPrice(order: Order) {
     return order.baskets.reduce(
-      (acc, basket) => acc + basket.product!.price * basket.quantity,
+      (acc, basket) => acc + basket.product!.UnitPrice * basket.quantity,
       0
     );
   }

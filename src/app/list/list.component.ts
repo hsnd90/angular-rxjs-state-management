@@ -7,6 +7,7 @@ import { combineLatest, zip, map } from 'rxjs';
 import { Parameter, ParameterStore } from '../stores/parameter.store';
 import { CategoryStore } from '../stores/category.store';
 import { categories } from '../category';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -29,7 +30,7 @@ export class ListComponent implements OnDestroy {
   readonly parameterStore: InstanceType<typeof ParameterStore> =
     inject(ParameterStore);
 
-  constructor() {
+  constructor(private router:Router) {
     this.productCount = this.productStore.count;
     this.parameters = this.parameterStore.state;
     this.rowsPerPage = this.parameters.rowsPerPage;
@@ -67,16 +68,48 @@ export class ListComponent implements OnDestroy {
           let rowsPerPage = data.rowsPerPage;
           this.pageSize = Math.ceil(productCount / rowsPerPage);
           this.products = this.productStore.getByPageNumber(this.activePage);
-          this.products = this.products.map((product) => {
-            product.category = this.mapCategory(product.categoryId);
-            return product;
-          });
         }
       );
   }
 
   get pagesNumberAsArray() {
-    return Array.from({ length: this.pageSize }, (_, i) => i + 1);
+    const visiblePages: (number | string)[] = [];
+    const maxVisiblePages = 5; // Kaç sayfa gösterilecek (1, 2, ..., 5, 6, 'ellipsis', 10)
+    let startPage = 1;
+    let endPage = this.pageSize;
+
+    if (this.pageSize > maxVisiblePages) {
+      startPage = Math.max(
+        this.activePage - Math.floor(maxVisiblePages / 2),
+        1
+      );
+      endPage = startPage + maxVisiblePages - 1;
+
+      if (endPage > this.pageSize) {
+        endPage = this.pageSize;
+        startPage = endPage - maxVisiblePages + 1;
+      }
+    }
+
+    if (startPage > 1) {
+      visiblePages.push(1);
+      if (startPage > 2) {
+        visiblePages.push('ellipsis');
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      visiblePages.push(i);
+    }
+
+    if (endPage < this.pageSize) {
+      if (endPage < this.pageSize - 1) {
+        visiblePages.push('ellipsis');
+      }
+      visiblePages.push(this.pageSize);
+    }
+
+    return visiblePages;
   }
 
   mapCategory(categoryId: number) {
@@ -101,7 +134,7 @@ export class ListComponent implements OnDestroy {
     this.getProducts();
   }
 
-  onPage(pageNumber: number) {
+  onPage(pageNumber: any) {
     this.activePage = pageNumber;
     this.getProducts();
   }
@@ -115,6 +148,14 @@ export class ListComponent implements OnDestroy {
         rowsPerPage: this.rowsPerPage,
       },
     });
+  }
+
+  editProduct(product: Product) {
+    this.router.navigate(['/edit-product', product._id]);
+  }
+
+  removeProduct(id: any) {
+    this.productStore.deleteProduct(id);
   }
 
   ngOnDestroy(): void {}
