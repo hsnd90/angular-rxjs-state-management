@@ -30,7 +30,7 @@ export class ListComponent implements OnDestroy {
   readonly parameterStore: InstanceType<typeof ParameterStore> =
     inject(ParameterStore);
 
-  constructor(private router:Router) {
+  constructor(private router: Router) {
     this.productCount = this.productStore.count;
     this.parameters = this.parameterStore.state;
     this.rowsPerPage = this.parameters.rowsPerPage;
@@ -41,35 +41,25 @@ export class ListComponent implements OnDestroy {
   }
 
   getProducts() {
-    combineLatest([
-      this.categoryStore.watch(['categories']),
-      this.productStore.state$,
-      this.parameterStore.watch(['rowsPerPage']),
-    ])
-      .pipe(
-        map((x: any) => {
-          return {
-            categories: x[0],
-            products: x[1],
-            rowsPerPage: x[2],
-          };
-        })
-      )
-      .subscribe(
-        (
-          data: {
-            categories: any[];
-            products: any[];
-            rowsPerPage: number;
-          } | null
-        ) => {
-          if (!data) return;
-          let productCount = this.productStore.count;
-          let rowsPerPage = data.rowsPerPage;
-          this.pageSize = Math.ceil(productCount / rowsPerPage);
-          this.products = this.productStore.getByPageNumber(this.activePage);
-        }
-      );
+    combineLatest({
+      categories: this.categoryStore.watch(['categories']),
+      products: this.productStore.state$,
+      rowsPerPage: this.parameterStore.watch(['rowsPerPage']),
+    }).subscribe(
+      (
+        data: {
+          categories: any[];
+          products: any[];
+          rowsPerPage: number;
+        } | null
+      ) => {
+        if (!data) return;
+        let productCount = this.productStore.count;
+        let rowsPerPage = data.rowsPerPage;
+        this.pageSize = Math.ceil(productCount / rowsPerPage);
+        this.products = this.productStore.getByPageNumber(this.activePage);
+      }
+    );
   }
 
   get pagesNumberAsArray() {

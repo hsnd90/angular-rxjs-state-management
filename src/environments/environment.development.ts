@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'https://market.hasanada.site/',
+  apiUrl: 'http://localhost:4000/',
 };

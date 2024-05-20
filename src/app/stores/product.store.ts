@@ -90,7 +90,7 @@ export class ProductStore extends Store<Product, ArrayStore> {
     this.productService.updateProduct(product).subscribe((product) => {
       store[index] = product;
       this.patchState({
-        operation: ProductOperation.ADDED,
+        operation: ProductOperation.UPDATED,
         value: product,
         values: store,
       });
@@ -106,6 +106,7 @@ export class ProductStore extends Store<Product, ArrayStore> {
 export enum ProductOperation {
   LOADED = 'loaded',
   ADDED = 'added',
+  UPDATED= 'updated',
   INCREMENT_QUANTITY = 'increment_quantity',
   INCREMENT_QUANTITY_SOLD = 'increment_quantity_sold',
   DECREMENT_QUANTITY = 'decrement_quantity',
