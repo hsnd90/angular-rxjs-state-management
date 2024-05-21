@@ -1,38 +1,38 @@
 import { inject, Injectable } from '@angular/core';
-import { ArrayStore, Store } from '../store';
+import { Store } from '../store';
 import { Basket } from '../models/basket.model';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BasketStore extends Store<Basket, ArrayStore> {
+export class BasketStore extends Store<Basket[]> {
   readonly toastrService: InstanceType<typeof ToastrService> =
     inject(ToastrService);
 
   constructor() {
-    super({ operation: null, value: null, values: [] });
+    super({ operation: null, value: [] });
   }
 
   addBasket(product: Basket) {
     let baskets = this.state;
-    let ifExistIndex = baskets.findIndex(
+    let ifExistIndex = baskets?.findIndex(
       (item: any) => item.productid === product.productid
     );
 
     if (ifExistIndex > -1) {
       let product = baskets[ifExistIndex];
       product.quantity = product.quantity + 1;
-      this.patchState({
+      this.updateState({
         operation: BasketOperation.INCREMENT_QUANTITY,
-        value: product,
-        values: [...baskets],
+        obj: product,
+        value: [...baskets],
       });
     } else {
-      this.patchState({
+      this.updateState({
         operation: BasketOperation.ADDED,
-        value: product,
-        values: [...baskets, product],
+        obj: product,
+        value: [...baskets, product],
       });
     }
     this.toastrService.success('Product added to basket');
@@ -44,23 +44,23 @@ export class BasketStore extends Store<Basket, ArrayStore> {
     let removedProduct = structuredClone(baskets[index]);
     if (baskets[index].quantity > 1) {
       baskets[index].quantity = baskets[index].quantity - 1;
-      this.patchState({
+      this.updateState({
         operation: BasketOperation.DECREMENT_QUANTITY,
-        value: removedProduct,
-        values: [...baskets],
+        obj: removedProduct,
+        value: [...baskets],
       });
     } else {
       baskets.splice(index, 1);
-      this.patchState({
+      this.updateState({
         operation: BasketOperation.REMOVED,
-        value: removedProduct,
-        values: [...baskets],
+        obj: removedProduct,
+        value: [...baskets],
       });
     }
   }
 
   clearBasket() {
-    this.clearState();
+    this.clearState([]);
   }
 
   getBaskets() {

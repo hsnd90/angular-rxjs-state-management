@@ -1,14 +1,13 @@
-<app-favorite-list></app-favorite-list>
 <div class="container mt-2">
   <div
     class="header d-flex flex-row justify-content-between align-items-center"
   >
-    <button class="btn btn-success" [routerLink]="'/add-product'">
+    <button class="btn btn-success" [routerLink]="'/products/add-product'">
       Ürün Ekle
     </button>
     <p class="p-o m-0">
       <i>
-        <b>{{ productStore.count }}</b> adet ürün listelenmektedir.
+        <b>{{ productStore.state.length }}</b> adet ürün listelenmektedir.
       </i>
     </p>
   </div>
@@ -44,7 +43,7 @@
     </tbody>
   </table>
   <nav
-    *ngIf="productStore.count > 0"
+    *ngIf="productStore.state.length > 0"
     aria-label="Page navigation example"
     class="d-flex flex-row align-items-center justify-content-center"
   >

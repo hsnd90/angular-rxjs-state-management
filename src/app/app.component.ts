@@ -1,8 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ProductOperation, ProductStore } from './stores/product.store';
-import { BasketOperation, BasketStore } from './stores/basket.store';
-import { OrderOperation, OrderStore } from './stores/order.store';
-import { Subscription } from 'rxjs';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { CategoryStore } from './stores/category.store';
 
 @Component({

@@ -27,7 +27,7 @@ export class BasketDetailComponent implements OnDestroy {
   onOrder() {
     this.orderStore.addOrder({
       address: 'İstanbul',
-      totalPrice: this.getTotalPrice(),
+      totalPrice: Number(this.getTotalPrice()),
       baskets: this.baskets,
     });
     this.basketStore.clearBasket();
@@ -48,7 +48,7 @@ export class BasketDetailComponent implements OnDestroy {
     return this.baskets.reduce(
       (acc, basket) => acc + basket.product!.UnitPrice * basket.quantity,
       0
-    );
+    ).toFixed(2);
   }
 
   ngOnDestroy(): void {}

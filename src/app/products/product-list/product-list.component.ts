@@ -1,20 +1,19 @@
 import { Component, inject, OnDestroy } from '@angular/core';
-import { Product } from '../models/product.model';
-import { ProductStore } from '../stores/product.store';
-import { BasketStore } from '../stores/basket.store';
-import { Category } from '../models/category.model';
-import { combineLatest, zip, map } from 'rxjs';
-import { Parameter, ParameterStore } from '../stores/parameter.store';
-import { CategoryStore } from '../stores/category.store';
-import { categories } from '../category';
+import { combineLatest } from 'rxjs';
 import { Router } from '@angular/router';
+import { ProductStore } from 'src/app/stores/product.store';
+import { BasketStore } from 'src/app/stores/basket.store';
+import { CategoryStore } from 'src/app/stores/category.store';
+import { Parameter, ParameterStore } from 'src/app/stores/parameter.store';
+import { Product } from 'src/app/models/product.model';
+import { Category } from 'src/app/models/category.model';
 
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  selector: 'app-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.scss'],
 })
-export class ListComponent implements OnDestroy {
+export class ProductListComponent implements OnDestroy {
   parameters: Parameter;
   products: Product[] = [];
   pageSize: number = 0;
@@ -31,9 +30,9 @@ export class ListComponent implements OnDestroy {
     inject(ParameterStore);
 
   constructor(private router: Router) {
-    this.productCount = this.productStore.count;
+    this.productCount = this.productStore.state.length;
     this.parameters = this.parameterStore.state;
-    this.rowsPerPage = this.parameters.rowsPerPage;
+    this.rowsPerPage = this.parameters.rowsPerPage!;
   }
 
   async ngOnInit() {
@@ -46,17 +45,11 @@ export class ListComponent implements OnDestroy {
       products: this.productStore.state$,
       rowsPerPage: this.parameterStore.watch(['rowsPerPage']),
     }).subscribe(
-      (
-        data: {
-          categories: any[];
-          products: any[];
-          rowsPerPage: number;
-        } | null
-      ) => {
+      (data: { categories: any[]; products: any[]; rowsPerPage?: number }) => {
         if (!data) return;
-        let productCount = this.productStore.count;
+        let productCount = this.productStore.state.length;
         let rowsPerPage = data.rowsPerPage;
-        this.pageSize = Math.ceil(productCount / rowsPerPage);
+        this.pageSize = Math.ceil(productCount / rowsPerPage!);
         this.products = this.productStore.getByPageNumber(this.activePage);
       }
     );
@@ -102,10 +95,6 @@ export class ListComponent implements OnDestroy {
     return visiblePages;
   }
 
-  mapCategory(categoryId: number) {
-    return categories.find((category) => category.id === categoryId);
-  }
-
   addProductToBasket(product: Product) {
     this.basketStore.addBasket({
       productid: product.id!,
@@ -131,7 +120,7 @@ export class ListComponent implements OnDestroy {
 
   onRowsPerPageChange() {
     this.activePage = 1;
-    this.parameterStore.patchState({
+    this.parameterStore.updateState({
       operation: 'rowsPerPage',
       value: {
         ...this.parameterStore.state,
@@ -141,7 +130,7 @@ export class ListComponent implements OnDestroy {
   }
 
   editProduct(product: Product) {
-    this.router.navigate(['/edit-product', product._id]);
+    this.router.navigate(['/products/edit-product', product._id]);
   }
 
   removeProduct(id: any) {

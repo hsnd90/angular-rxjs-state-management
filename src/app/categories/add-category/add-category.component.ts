@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CategoryStore } from '../stores/category.store';
 import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { CategoryStore } from 'src/app/stores/category.store';
 
 @Component({
   selector: 'app-add-category',
@@ -14,8 +15,27 @@ export class AddCategoryComponent {
   categoryForm = new FormGroup({
     name: new FormControl('', Validators.required),
   });
+  id: string = '';
 
-  constructor(private location: Location) {}
+  constructor(
+    private location: Location,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.id = this.activatedRoute.snapshot.params['id'];
+
+    if (this.id) {
+      this.categoryStore.watch('categories').subscribe((data: any) => {
+        try {
+          const category = data.find(
+            (category: any) => category._id === this.id
+          );
+          this.categoryForm.patchValue({
+            name: category.Name,
+          });
+        } catch (error) {}
+      });
+    }
+  }
 
   onSubmit() {
     if (this.categoryForm.valid) {

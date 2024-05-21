@@ -6,32 +6,24 @@ import {
   Observable,
   share,
 } from 'rxjs';
-import { map as _map, mapValues, partialRight, pick, isEqual } from 'lodash';
+import { map as _map, isEqual } from 'lodash';
 /**
  * @typeParam T - Store'da saklanacak verinin tipi veya modeli.
- * @typeParam U - Store tipi. ArrayStore veya ObjectStore olabilir.
  */
-export class Store<T, U> {
-  private storeType = '';
-  constructor(private initialValue: U) {
+export class Store<T> {
+  constructor(private initialValue: StoreParameter<T>) {
     (this.initialValue as any).operation = 'initialized';
-    if ((this.subject.value as any).hasOwnProperty('values')) {
-      this.storeType = StroreType.ArrayStore;
-    } else {
-      this.storeType = StroreType.ObjectStore;
-    }
   }
 
-  private readonly subject: BehaviorSubject<U> = new BehaviorSubject<U>(
-    this.initialValue
-  );
+  private readonly subject: BehaviorSubject<StoreParameter<T>> =
+    new BehaviorSubject<StoreParameter<T>>(this.initialValue);
 
   /**
    * @description Store'daki veri değiştiğinde tetiklenir.
    * @returns ArrayStore veya ObjectStore tipinde veri döner.
    */
   readonly onChanged$ = (operations?: string | string[]) =>
-    (this.subject.asObservable() as Observable<U>).pipe(
+    (this.subject.asObservable() as Observable<StoreParameter<T>>).pipe(
       filter((data: any) => {
         if (operations) {
           if (Array.isArray(operations)) {
@@ -48,137 +40,60 @@ export class Store<T, U> {
    * @description Store'a veri yükler. Store daha önce yüklenmişse çalışmaz.
    * @param value - Saklanan veri Array ise ArrayStore, Object ise ObjectStore tipinde olmalıdır.
    */
-  protected load(value: U extends ArrayStore ? T[] : T): void {
-    if (this.storeType === StroreType.ArrayStore) {
-      if ((this.subject.value as any).values.length > 0) {
-        return;
-      } else {
-        this.subject.next({
-          operation: 'loaded',
-          value: null,
-          values: value,
-        } as any);
-      }
-    } else if (this.storeType === StroreType.ObjectStore) {
-      if (
-        (this.subject.value as any).value &&
-        Object.keys((this.subject.value as any).value)?.length > 0
-      ) {
-        return;
-      } else {
-        this.subject.next({ value, operation: 'loaded' } as any);
-      }
-    }
+  protected load(value: T): void {
+    this.subject.next({ value, operation: 'loaded' } as any);
   }
 
   /**
    * @description Store'daki veriyi döner.
    * @returns
    */
-  get state(): StoreValueType<T, U> {
-    if (this.storeType === StroreType.ArrayStore) {
-      return structuredClone(
-        (this.subject.getValue() as any).values
-      ) as StoreValueType<T, U>;
-    } else {
-      return structuredClone(
-        (this.subject.getValue() as any).value
-      ) as StoreValueType<T, U>;
-    }
+  get state(): T {
+    return structuredClone(this.subject.getValue().value);
   }
 
-  get state$(): Observable<StoreValueType<T, U>> {
-    if (this.storeType === StroreType.ArrayStore) {
-      return this.subject.pipe(map((x: any) => x.values)) as Observable<
-        StoreValueType<T, U>
-      >;
-    } else {
-      return this.subject.asObservable().pipe(
-        map((x: any) => {
-          return x.value;
-        })
-      ) as Observable<StoreValueType<T, U>>;
-    }
+  get state$(): Observable<T> {
+    return this.subject.asObservable().pipe(
+      map((x: any) => {
+        return x.value;
+      })
+    );
   }
 
-  watch<K extends keyof T>(key: K | K[]): Observable<T[K]> {
-    if (this.storeType === StroreType.ArrayStore) {
-      return this.state$.pipe(
-        map((state: any) => {
-          if (Array.isArray(key)) {
-            return _map(state, partialRight(pick, key));
-          } else {
-            return _map(state, partialRight(pick, key)) as any;
-          }
-        }),
-        distinctUntilChanged((a, b) => isEqual(a, b)),
-        share()
-      );
-    } else {
-      return this.state$.pipe(
-        map((state: any) => {
-          if (state) return (state as any)[key];
-        }),
-        distinctUntilChanged((a, b) => isEqual(a, b)),
-        share()
-      );
-    }
+  watch<K extends keyof T>(key?: K | K[]): Observable<T[K]> {
+    return this.state$.pipe(
+      map((state: any) => {
+        if (state) {
+          if (key) return state[key];
+          else return state;
+        }
+      }),
+      distinctUntilChanged((a, b) => isEqual(a, b)),
+      share()
+    );
   }
 
   /**
    * @description Store'daki veriyi günceller.
    * @param value - Saklanan veri Array ise ArrayStore, Object ise ObjectStore tipinde olmalıdır.
    */
-  patchState(value: U): void {
+  updateState(value: StoreParameter<T>): void {
     this.subject.next(value);
-  }
-
-  /**
-   * @description Store'daki veri sayısını döner.
-   */
-  get count(): number {
-    if (this.storeType === StroreType.ArrayStore) {
-      return (this.subject.getValue() as any).values.length;
-    } else {
-      throw new Error('This store is ObjectStore, not an ArrayStore.');
-    }
   }
 
   /**
    * @description Store'daki tüm veriyi temizler.
    */
-  clearState(): void {
-    if (this.storeType === StroreType.ArrayStore) {
-      this.subject.next({
-        operation: 'cleared',
-        value: null,
-        values: [],
-      } as any);
-    } else {
-      this.subject.next({
-        operation: 'cleared',
-        value: {},
-      } as any);
-    }
+  clearState(val?: undefined | T): void {
+    this.subject.next({
+      operation: 'cleared',
+      value: (val as any) ?? undefined,
+    });
   }
 }
 
-interface BaseStore {
+interface StoreParameter<T> {
   operation: any;
-}
-
-type StoreValueType<T, U> = U extends ArrayStore ? T[] : T;
-
-export type ObjectStore = {
-  value: any;
-} & BaseStore;
-
-export type ArrayStore = {
-  value: any;
-  values: any[];
-} & BaseStore;
-
-enum StroreType {
-  ObjectStore = 'ObjectStore',
-  ArrayStore = 'ArrayStore',
+  obj?: any;
+  value: T;
 }

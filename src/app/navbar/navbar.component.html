@@ -1,13 +1,15 @@
 <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand cursor-pointer" [routerLink]="'/list'">Shopping</a>
+    <a class="navbar-brand cursor-pointer" [routerLink]="'/products'"
+      >Shopping</a
+    >
     <div style="flex: 1">
       <ul class="navbar-nav d-flex flex-row gap-3">
         <li class="nav-item">
           <a
             class="nav-link"
             [routerLinkActive]="'active'"
-            [routerLink]="'/list'"
+            [routerLink]="'/products'"
             >Ürünler</a
           >
         </li>
@@ -22,7 +24,20 @@
       </ul>
     </div>
     <form class="d-flex gap-3" role="search">
-      <app-basket></app-basket>
+      <div
+        class="basket-container position-relative me-2 cursor-pointer"
+        [routerLink]="'/basket-detail'"
+      >
+        <i class="fas fa-shopping-cart icon-size-2x"></i>
+        <span
+          *ngIf="basketSize > 0"
+          class="position-absolute p-1 bg-danger text-white border border-light rounded-circle chip"
+        >
+          <p class="m-0 p-0">
+            {{ basketSize }}
+          </p>
+        </span>
+      </div>
       <app-profile></app-profile>
     </form>
   </div>

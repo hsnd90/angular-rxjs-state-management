@@ -16,10 +16,12 @@ export class OrderComponent implements OnDestroy {
   }
 
   getTotalPrice(order: Order) {
-    return order.baskets.reduce(
-      (acc, basket) => acc + basket.product!.UnitPrice * basket.quantity,
-      0
-    );
+    return order.baskets
+      .reduce(
+        (acc, basket) => acc + basket.product!.UnitPrice * basket.quantity,
+        0
+      )
+      .toFixed(2);
   }
 
   ngOnDestroy(): void {}

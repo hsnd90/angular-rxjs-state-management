@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { ArrayStore, Store } from '../store';
+import { Store } from '../store';
 import { Order } from '../models/order.model';
 import { ProductStore } from './product.store';
 import { ToastrService } from 'ngx-toastr';
@@ -7,12 +7,12 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root',
 })
-export class OrderStore extends Store<Order, ArrayStore> {
+export class OrderStore extends Store<Order[]> {
   private productStore: ProductStore;
   private toastrService: ToastrService = inject(ToastrService);
 
   constructor() {
-    super({ operation: null, value: null, values: [] });
+    super({ operation: null, value: [] });
     this.productStore = inject(ProductStore);
   }
 
@@ -21,10 +21,10 @@ export class OrderStore extends Store<Order, ArrayStore> {
     order.baskets.forEach((basket: any) => {
       this.productStore.incrementQuantitySold(basket.product!, basket.quantity);
     });
-    this.patchState({
+    this.updateState({
       operation: OrderOperation.ADDED,
-      value: order,
-      values: [...this.state, order],
+      obj: order,
+      value: [...this.state, order],
     });
     this.toastrService.success('Order added successfully');
   }

@@ -1,0 +1,74 @@
+<div class="container mt-2">
+  <div
+    class="header d-flex flex-row justify-content-between align-items-center"
+  >
+    <button class="btn btn-success" [routerLink]="'/categories/add-category'">
+      Kategori Ekle
+    </button>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Kategori Adı</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of categories; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ p.Name }}</td>
+        <td class="d-flex flex-row gap-3">
+          <i
+            class="fas fa-pencil icon-size-2x cursor-pointer"
+            (click)="editCategory(p)"
+          ></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <nav
+    *ngIf="categoryStore.state.categories.length > 0"
+    aria-label="Page navigation example"
+    class="d-flex flex-row align-items-center justify-content-center"
+  >
+    <ul class="pagination justify-content-center m-0">
+      <li
+        class="page-item cursor-pointer"
+        [ngClass]="{ disabled: activePage == 1 }"
+      >
+        <a class="page-link" (click)="onPrevious()">Previous</a>
+      </li>
+      <ng-container *ngFor="let no of pagesNumberAsArray">
+        <li *ngIf="no === 'ellipsis'" class="page-item disabled">
+          <a class="page-link">...</a>
+        </li>
+        <li
+          *ngIf="no !== 'ellipsis'"
+          class="page-item cursor-pointer"
+          (click)="onPage(no)"
+        >
+          <a class="page-link" [ngClass]="{ active: activePage === no }">{{
+            no
+          }}</a>
+        </li>
+      </ng-container>
+      <li
+        class="page-item cursor-pointer"
+        [ngClass]="{ disabled: activePage === pageSize }"
+      >
+        <a class="page-link" (click)="onForward()">Next</a>
+      </li>
+    </ul>
+    <select
+      class="form-select m-0 ms-1"
+      style="width: 80px"
+      [(ngModel)]="rowsPerPage"
+      (change)="onRowsPerPageChange()"
+    >
+      <option [value]="10">10</option>
+      <option [value]="25">25</option>
+      <option [value]="50">50</option>
+    </select>
+  </nav>
+</div>
